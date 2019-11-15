@@ -55,7 +55,7 @@ int main(void)
 void init(void) // 콘솔창의 크기 와 커서 
 {
 	
-	system("mode con cols=63 lines=28 | title Escape Game");
+	system("mode con cols=68 lines=28 | title Escape Game");
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO ConsoleCursor;
 	ConsoleCursor.bVisible = 0;
@@ -75,16 +75,16 @@ void gotoxy(int x, int y)
 void title_draw(void) // 타이틀 그리기
 {
 	printf("\n\n");
-	printf("  _____    _    ____ _____ _   ___        _____  ____  __  __ \n");
-	printf(" | ____|  / \\  |  _ \\_   _| | | \\ \\      / / _ \\|  _ \\|  \\/  |\n");
-	printf(" |  _|   / _ \\ | |_) || | | |_| |\\ \\ /\\ / / | | | |_) | |\\/| |\n");
-	printf(" | |___ / ___ \\|  _ < | | |  _  | \\ V  V /| |_| |  _ <| |  | |\n");
-	printf(" |_____/_/   \\_\\_| \\_\\|_| |_| |_|  \\_/\\_/  \\___/|_| \\_\\_|  |_|\n");
-	printf("                   ____    _    __  __ _____                  \n");
-	printf("                  / ___|  / \\  |  \\/  | ____|                 \n");
-	printf("                 | |  _  / _ \\ | |\\/| |  _|                   \n");
-	printf("                 | |_| |/ ___ \\| |  | | |___                  \n");
-	printf("                  \\____/_/   \\_\\_|  |_|_____|                 \n");
+	printf("    _____    _    ____ _____ _   ___        _____  ____  __  __ \n");
+	printf("   | ____|  / \\  |  _ \\_   _| | | \\ \\      / / _ \\|  _ \\|  \\/  |\n");
+	printf("   |  _|   / _ \\ | |_) || | | |_| |\\ \\ /\\ / / | | | |_) | |\\/| |\n");
+	printf("   | |___ / ___ \\|  _ < | | |  _  | \\ V  V /| |_| |  _ <| |  | |\n");
+	printf("   |_____/_/   \\_\\_| \\_\\|_| |_| |_|  \\_/\\_/  \\___/|_| \\_\\_|  |_|\n");
+	printf("                     ____    _    __  __ _____                  \n");
+	printf("                    / ___|  / \\  |  \\/  | ____|                 \n");
+	printf("                   | |  _  / _ \\ | |\\/| |  _|                   \n");
+	printf("                   | |_| |/ ___ \\| |  | | |___                  \n");
+	printf("                    \\____/_/   \\_\\_|  |_|_____|                 \n");
 
 }
 
@@ -129,7 +129,7 @@ int key_control(void)
 
 int menu_draw(void) // 메뉴를 그리는 함수
 {
-	int x = 30;
+	int x = 28;
 	int y = 16;
 
 	gotoxy(x - 2, y);
@@ -179,7 +179,14 @@ int menu_draw(void) // 메뉴를 그리는 함수
 void info_draw(void)
 {
 	system("cls");
-	printf("not yet");
+	printf("\n\n\n");
+	printf("                              [규칙]\n\n");
+	printf("    o 지렁이는 현재 머리가 향하고 있는 방향으로 계속 이동합니다.\n");
+	printf("      플레이어의 조작으로 머리의 진행방향을 바꿀수 있습니다.\n");
+	printf("    o 지렁이는 벽이나 자신의 몸 일부에 닿으면 죽습니다.\n");
+	printf("    o 지렁이는 먹이를 먹을때마다 몸이 길어집니다 \n");
+	printf("    o 지렁이의 길이를 늘려보세요!!\n\n");
+	printf("                              [조작방법]\n\n");
 	
 	while (1)
 	{
