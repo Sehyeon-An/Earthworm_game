@@ -1,29 +1,61 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
 #include <windows.h>
 
-#define LEFT 75 // ¹æÇâÅ° ¿ÞÂÊ
-#define RIGHT 77 // ¹æÇâÅ° ¿À¸¥ÂÊ
-#define UP 72 // ¹æÇâÅ° À§ÂÊ
-#define DOWN 80 // ¹æÇâÅ° ¾Æ·¡ÂÊ
-#define SPACE 32 // 
+#define LEFT 75 // ë°©í–¥í‚¤ ì™¼ìª½
+#define RIGHT 77 // ë°©í–¥í‚¤ ì˜¤ë¥¸ìª½
+#define UP 72 // ë°©í–¥í‚¤ ìœ„ìª½
+#define DOWN 80 // ë°©í–¥í‚¤ ì•„ëž˜ìª½
+#define ENTER 13 // ì—”í„°í‚¤ (í™•ì¸ë²„íŠ¼)
 
 void init(void);
 void title_draw(void);
+int menu_draw(void);
+int key_control(void);
+void gotoxy(int x, int y);
+void info_draw(void);
 
-int key; // Å°º¸µå·Î ºÎÅÍ ÀÔ·Â¹ÞÀº °ª
+int key; // í‚¤ë³´ë“œë¡œ ë¶€í„° ìž…ë ¥ë°›ì€ ê°’
 
 int main(void)
 {
+	int menu_code;
+	
 	init();
-	title_draw();
+	while (1)
+	{
+		title_draw();
+		menu_code = menu_draw();
+
+		if (menu_code == 0)
+		{
+			printf("a");
+		}
+		else if (menu_code == 2)
+		{
+			info_draw();
+		}
+		else if (menu_code == 4)
+		{
+			break;
+		}
+		menu_code = 5;
+		system("cls");
+	}
+
+	gotoxy(30, 24);
+	printf("ê²Œìž„ ì¢…ë£Œ!");
+	_getch();
+
+	return 0;
+
 }
 
-void init(void) // ÄÜ¼ÖÃ¢ÀÇ Å©±â ¿Í Ä¿¼­ 
+void init(void) // ì½˜ì†”ì°½ì˜ í¬ê¸° ì™€ ì»¤ì„œ 
 {
-	system("mode con cols=70 lines=35 | title Earthworm_game");
-
+	
+	system("mode con cols=63 lines=28 | title Escape Game");
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO ConsoleCursor;
 	ConsoleCursor.bVisible = 0;
@@ -40,7 +72,7 @@ void gotoxy(int x, int y)
 }
 
 
-void title_draw(void) // Å¸ÀÌÆ² ±×¸®±â
+void title_draw(void) // íƒ€ì´í‹€ ê·¸ë¦¬ê¸°
 {
 	printf("\n\n");
 	printf("  _____    _    ____ _____ _   ___        _____  ____  __  __ \n");
@@ -54,4 +86,106 @@ void title_draw(void) // Å¸ÀÌÆ² ±×¸®±â
 	printf("                 | |_| |/ ___ \\| |  | | |___                  \n");
 	printf("                  \\____/_/   \\_\\_|  |_|_____|                 \n");
 
+}
+
+int key_control(void)
+{
+	key = 0; // í‚¤ê°’ì„ ì´ˆê¸°í™”
+	while (1)
+	{
+		if (_kbhit())
+		{
+			key = _getch();
+			if (key == 224)
+			{
+				key = _getch();
+				switch (key)
+				{
+				case 72:
+					return UP;
+					break;
+				case 75:
+					return LEFT;
+					break;
+				case 77:
+					return RIGHT;
+					break;
+				case 80:
+					return DOWN;
+					break;
+				default:
+					break;
+				}
+			}
+			else
+			{
+				if (key == 13)
+					return ENTER;
+			}
+			
+		}
+	}
+}
+
+int menu_draw(void) // ë©”ë‰´ë¥¼ ê·¸ë¦¬ëŠ” í•¨ìˆ˜
+{
+	int x = 30;
+	int y = 16;
+
+	gotoxy(x - 2, y);
+	printf("> ê²Œìž„ì‹œìž‘");
+	gotoxy(x, y + 2);
+	printf("ì¡°ìž‘ë°©ë²•");
+	gotoxy(x, y + 4);
+	printf("  ì¢…ë£Œ  ");
+	
+	while (1)
+	{
+		int n = key_control();
+		switch (n)
+		{
+			case UP:
+			{
+				if (y > 16)
+				{
+					gotoxy(x - 2, y);
+					printf(" ");
+					gotoxy(x - 2, y-2);
+					printf(">");
+					y -= 2;
+				}
+				break;
+			}
+			case DOWN:
+			{
+				if (y < 20)
+				{
+					gotoxy(x - 2, y);
+					printf(" ");
+					gotoxy(x - 2, y+2);
+					printf(">");
+					y += 2;
+				}
+				break;
+			}
+			case ENTER:
+			{
+				return y - 16;  // 0 2 4 ì¤‘ í•˜ë‚˜ë¥¼ ë¦¬í„´í•´ì¤Œ
+			}
+		}
+	}
+}
+
+void info_draw(void)
+{
+	system("cls");
+	printf("not yet");
+	
+	while (1)
+	{
+		if (key_control() == ENTER)
+		{
+			break;
+		}
+	}
 }
