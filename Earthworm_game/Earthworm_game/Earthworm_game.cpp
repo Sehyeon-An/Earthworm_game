@@ -28,15 +28,15 @@ int main(void)
 		title_draw();
 		menu_code = menu_draw();
 
-		if (menu_code == 0)
+		if (menu_code == 0) //게임 시작
 		{
 			printf("a");
 		}
-		else if (menu_code == 2)
+		else if (menu_code == 2) // 게임 정보
 		{
 			info_draw();
 		}
-		else if (menu_code == 4)
+		else if (menu_code == 4) // 게임 종료
 		{
 			break;
 		}
@@ -44,7 +44,7 @@ int main(void)
 		system("cls");
 	}
 
-	gotoxy(30, 24);
+	gotoxy(28, 24);
 	printf("게임 종료!");
 	_getch();
 
@@ -88,7 +88,7 @@ void title_draw(void) // 타이틀 그리기
 
 }
 
-int key_control(void)
+int key_control(void) // 키값을 받는함수
 {
 	key = 0; // 키값을 초기화
 	while (1)
@@ -186,9 +186,9 @@ void info_draw(void)
 	printf("    o 지렁이는 벽이나 자신의 몸 일부에 닿으면 죽습니다.\n");
 	printf("    o 지렁이는 먹이를 먹을때마다 몸이 길어집니다 \n");
 	printf("    o 지렁이의 길이를 늘려보세요!!\n\n");
-	printf("                              [조작방법]\n\n");
+	printf("                              [조작방법]\n\n"); // 추가해 주세용
 	
-	while (1)
+	while (1) // ENTER을 입력받으면 메인화면으로 돌아갑니다.
 	{
 		if (key_control() == ENTER)
 		{
