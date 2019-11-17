@@ -34,7 +34,7 @@ int main(void)
 		if (menu_code == 0) //게임 시작
 		{
 			printf("11/16 들렸다 갑니다 ^^7");
-			//game_level();
+			game_level();
 		}
 		else if (menu_code == 2) // 게임 정보
 		{
@@ -56,10 +56,10 @@ int main(void)
 
 }
 
-void init(void) // 콘솔창의 크기 와 커서 
+void init(void) // 콘솔창의 크기와 커서 
 {
 	
-	system("mode con cols=68 lines=28 | title Escape Game");
+	system("mode con cols=68 lines=28 | title Escape Game"); // 임시 크기
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO ConsoleCursor;
 	ConsoleCursor.bVisible = 0;
@@ -83,7 +83,7 @@ void title_draw(void) // 타이틀 그리기
 	printf("   | ____|  / \\  |  _ \\_   _| | | \\ \\      / / _ \\|  _ \\|  \\/  |\n");
 	printf("   |  _|   / _ \\ | |_) || | | |_| |\\ \\ /\\ / / | | | |_) | |\\/| |\n");
 	printf("   | |___ / ___ \\|  _ < | | |  _  | \\ V  V /| |_| |  _ <| |  | |\n");
-	printf("   |_____/_/   \\_\\_| \\_\\|_| |_| |_|  \\_/\\_/  \\___/|_| \\_\\_|  |_|\n");
+	printf("   |_____/_/   \\_\\_| \\_\\|_| |_| |_|  \\_/\\_/  \\___/|_| \\_\\_|  |_|\n\n");
 	printf("                     ____    _    __  __ _____                  \n");
 	printf("                    / ___|  / \\  |  \\/  | ____|                 \n");
 	printf("                   | |  _  / _ \\ | |\\/| |  _|                   \n");
@@ -180,10 +180,10 @@ int menu_draw(void) // 메뉴를 그리는 함수
 	}
 }
 
-void info_draw(void)
+void info_draw(void) // 게임정보 
 {
 	system("cls");
-	printf("\n\n\n");
+	gotoxy(1, 3);
 	printf("                              [규칙]\n\n");
 	printf("    * 지렁이는 현재 머리가 향하고 있는 방향으로 계속 이동합니다.\n");
 	printf("      플레이어의 조작으로 머리의 진행 방향을 바꿀수 있습니다.\n");
@@ -205,14 +205,17 @@ void info_draw(void)
 	}
 }
 
-void game_level(void)
+void game_level(void) // 게임의 난이도 설정
 {
 	int n = 0;
 	system("cls");
 	gotoxy(1, 1);
-	printf("게임의 난이도를 선택하고 Enter키를 누르세요. (1~5)\n");
-	printf("난이도가 올라갈수록 지렁이의 이동 속도가 증가합니다!! \n\n");
-	printf("*다른 키를 누를 경우 난이도는 자동으로 3단계로 지정됩니다.\n");
+	printf("\n\n                          [난이도 선택]\n\n");
+	printf("\n\n    게임의 난이도를 선택하고 Enter키를 누르세요. (1~5)\n\n");
+	printf("    난이도가 올라갈수록 지렁이의 이동 속도가 증가합니다!! \n\n");
+	printf("   *다른 키를 누를 경우 난이도는 자동으로 3단계로 지정됩니다.\n");
+	gotoxy(28, 15);
+	printf("난이도: ");
 	scanf_s("%d", &n);
 	switch (n)
 	{
