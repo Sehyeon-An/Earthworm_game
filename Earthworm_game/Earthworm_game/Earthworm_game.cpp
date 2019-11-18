@@ -17,7 +17,6 @@ int key_control(void); // 키 값 반환 함수
 void gotoxy(int x, int y); // 커서 좌표 함수
 void info_draw(void); // 게임 방법 출력함수
 void game_level(void); // 지렁이 이동속도 조절 함수
-void game_background(void); // 게임 배경 그리는 함수
 
 int key; // 키보드로 부터 입력받은 값
 int speed = 0; //지렁이 스피드 조절(Sleep함수 파라미터)
@@ -36,7 +35,6 @@ int main(void)
 		{
 			printf("11/16 들렸다 갑니다 ^^7");
 			game_level();
-			game_background();
 		}
 		else if (menu_code == 2) // 게임 정보
 		{
@@ -243,26 +241,3 @@ void game_level(void) // 게임의 난이도 설정
 	system("cls");
 }
 
-void game_background(void) // 게임판의 가로 길이는 53,세로 길이는 27
-{
-	system("cls");
-	int i;
-	
-	gotoxy(1, 1);
-	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-	for (int i = 2; i <= 26; i++)
-	{
-		gotoxy(1, i);
-		printf("■");
-	}
-	for (int j = 2; j <= 26; j++)
-	{
-		gotoxy(53, j);
-		printf("■");
-	}
-	gotoxy(1, 27);
-	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-	scanf_s("%d", &i); //  그냥 화면 고정시키려고.....
-
-
-}
