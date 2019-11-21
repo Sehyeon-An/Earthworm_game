@@ -18,6 +18,7 @@ void gotoxy(int x, int y); // 커서 좌표 함수
 void info_draw(void); // 게임 방법 출력함수
 void game_level(void); // 지렁이 이동속도 조절 함수
 void game_background(void); // 게임 백그라운드 구현 함수(가로 51/세로 26)
+int select_level();
 
 int key; // 키보드로 부터 입력받은 값
 int speed = 0; //지렁이 스피드 조절(Sleep함수 파라미터)
@@ -215,32 +216,32 @@ void game_level(void) // 게임의 난이도 설정
 	printf("\n\n                          [난이도 선택]\n\n");
 	printf("\n\n    * 게임의 난이도를 선택하고 Enter키를 누르세요. (1~5)\n\n");
 	printf("    * 난이도가 올라갈수록 지렁이의 이동 속도가 증가합니다!! \n\n");
-	printf("	* 다른 키를 누를 경우 난이도는 자동으로 3단계로 지정됩니다.\n");
-	gotoxy(28, 15);
-	printf("난이도: ");
-	scanf_s("%d", &n);
+	n = select_level();
 	switch (n)
 	{
-		case 1:
+		case 0:
 			speed = 200;
-			break;
-		case 2:
-			speed = 175;
-			break;
-		case 3:
-			speed = 150;
-			break;
-		case 4:
-			speed = 125;
+			printf("0");
 			break;
 		case 5:
+			speed = 175;
+			printf("5");
+			break;
+		case 10:
+			speed = 150;
+			break;
+		case 15:
+			speed = 125;
+			break;
+		case 20:
 			speed = 100;
 			break;
 		default:
-			speed = 150;
+		speed = 150;
 			break;
 	}
-	system("cls");
+	n = 5;
+	//system("cls");
 }
 
 void game_background(void) // 게임 백그라운드 구현 함수(가로 51/세로 26)
@@ -263,4 +264,55 @@ void game_background(void) // 게임 백그라운드 구현 함수(가로 51/세
 	gotoxy(1, 26);
 	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■");
 	scanf_s("%d", &i); // 화면 고정용
+}
+int select_level()
+{
+	int x = 19;
+	int y = 15;
+
+	gotoxy(x, y);
+	printf("난이도 :①   ②   ③   ④   ⑤");
+	x += 8; // x = 27
+	y += 2; // y = 16
+	gotoxy(x, y);
+	printf("▲");
+	while (1)
+	{
+		int n = key_control();
+		switch (n)
+		{
+		case RIGHT:
+		{
+			if (x < 47)
+			{
+				gotoxy(x, y);
+				printf(" ");
+				gotoxy(x + 1, y);
+				printf(" ");
+				gotoxy(x + 5, y);
+				printf("▲");
+				x += 5;
+			}
+			break;
+		}
+		case LEFT:
+		{
+			if (x > 28)
+			{
+				gotoxy(x, y);
+				printf(" ");
+				gotoxy(x + 1, y);
+				printf(" ");
+				gotoxy(x - 5, y);
+				printf("▲");
+				x -= 5;
+			}
+			break;
+		}
+		case ENTER:
+		{
+			return x - 27; // 0,5,10,15,20,25 리턴
+		}
+		}
+	}
 }
