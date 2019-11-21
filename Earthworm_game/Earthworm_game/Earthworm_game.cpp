@@ -17,7 +17,7 @@ int key_control(void); // 키 값 반환 함수
 void gotoxy(int x, int y); // 커서 좌표 함수
 void info_draw(void); // 게임 방법 출력함수
 void game_level(void); // 지렁이 이동속도 조절 함수
-void game_background(void); // 게임 백그라운드 구현 함수(가로 53/세로 27)
+void game_background(void); // 게임 백그라운드 구현 함수(가로 51/세로 26)
 
 int key; // 키보드로 부터 입력받은 값
 int speed = 0; //지렁이 스피드 조절(Sleep함수 파라미터)
@@ -243,24 +243,24 @@ void game_level(void) // 게임의 난이도 설정
 	system("cls");
 }
 
-void game_background(void) // 게임 백그라운드 구현 함수(가로 53/세로 27)
+void game_background(void) // 게임 백그라운드 구현 함수(가로 51/세로 26)
 {
 	system("cls");
 	int i;
 
 	gotoxy(1, 1);
-	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-	for (int i = 2; i <= 26; i++)
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	for (int i = 2; i <= 25; i++)
 	{
 		gotoxy(1, i);
 		printf("■");
 	}
-	for (int j = 2; j <= 26; j++)
+	for (int j = 2; j <= 25; j++)
 	{
-		gotoxy(53, j);
+		gotoxy(51, j);
 		printf("■");
 	}
-	gotoxy(1, 27);
-	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	gotoxy(1, 26);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■");
 	scanf_s("%d", &i); // 화면 고정용
 }
