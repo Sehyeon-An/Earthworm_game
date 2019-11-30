@@ -29,15 +29,18 @@ int key_control(void); // 키 값 반환 함수
 void gotoxy(int x, int y); // 커서 좌표 함수
 void info_draw(void); // 게임 방법 출력함수
 void game_level(void); // 지렁이 이동속도 조절 함수
-void game_background(void); // 게임 백그라운드 구현 함수(가로 51/세로 26)
-void eat_star(void);
-int select_level();
-void scoreRecord();
-void game_loop(void);
+void game_background(void); // 게임 백그라운드 구현 함수
+void eat_star(void); // 먹이 먹기 ㅎ마수
+int select_level(); // 게임 레벨 선택
+void scoreRecord(); // 점수
+void game_loop(void); //게임루프
+void game_over(void); // 게임 오버 함수
 int body_number;
 int key; // 키보드로 부터 입력받은 값
 int speed = 0; //지렁이 스피드 조절(Sleep함수 파라미터)
 int playing;
+int len_earthworm = 0;
+int game_score = 0;
 
 unsigned char total_size[ROW + 1][COL + 1];
 // 충돌을 감지하기 위해 필요한 배열 
@@ -85,7 +88,7 @@ int main(void)
 void init(void) // 콘솔창의 크기와 커서 
 {
 
-	system("mode con cols=100 lines=25 | title Escape Game"); // 임시 크기
+	system("mode con cols=90 lines=23 | title Earthworm game");
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO ConsoleCursor;
 	ConsoleCursor.bVisible = 0;
@@ -107,16 +110,16 @@ void title_draw(void) // 타이틀 그리기
 {
 	system("cls");
 	printf("\n\n");
-	printf("    _____    _    ____ _____ _   ___        _____  ____  __  __ \n");
-	printf("   | ____|  / \\  |  _ \\_   _| | | \\ \\      / / _ \\|  _ \\|  \\/  |\n");
-	printf("   |  _|   / _ \\ | |_) || | | |_| |\\ \\ /\\ / / | | | |_) | |\\/| |\n");
-	printf("   | |___ / ___ \\|  _ < | | |  _  | \\ V  V /| |_| |  _ <| |  | |\n");
-	printf("   |_____/_/   \\_\\_| \\_\\|_| |_| |_|  \\_/\\_/  \\___/|_| \\_\\_|  |_|\n\n");
-	printf("                     ____    _    __  __ _____                  \n");
-	printf("                    / ___|  / \\  |  \\/  | ____|                 \n");
-	printf("                   | |  _  / _ \\ | |\\/| |  _|                   \n");
-	printf("                   | |_| |/ ___ \\| |  | | |___                  \n");
-	printf("                    \\____/_/   \\_\\_|  |_|_____|                 \n");
+	printf("               _____    _    ____ _____ _   ___        _____  ____  __  __ \n");
+	printf("              | ____|  / \\  |  _ \\_   _| | | \\ \\      / / _ \\|  _ \\|  \\/  |\n");
+	printf("              |  _|   / _ \\ | |_) || | | |_| |\\ \\ /\\ / / | | | |_) | |\\/| |\n");
+	printf("              | |___ / ___ \\|  _ < | | |  _  | \\ V  V /| |_| |  _ <| |  | |\n");
+	printf("              |_____/_/   \\_\\_| \\_\\|_| |_| |_|  \\_/\\_/  \\___/|_| \\_\\_|  |_|\n\n");
+	printf("                                ____    _    __  __ _____                  \n");
+	printf("                               / ___|  / \\  |  \\/  | ____|                 \n");
+	printf("                              | |  _  / _ \\ | |\\/| |  _|                   \n");
+	printf("                              | |_| |/ ___ \\| |  | | |___                  \n");
+	printf("                               \\____/_/   \\_\\_|  |_|_____|                 \n");
 
 }
 
@@ -161,7 +164,7 @@ int key_control(void) // 키값을 받는함수
 
 int menu_draw(void) // 메뉴를 그리는 함수
 {
-	int x = 28;
+	int x = 40;
 	int y = 16;
 
 	gotoxy(x - 2, y);
@@ -212,18 +215,18 @@ void info_draw(void) // 게임정보
 {
 	system("cls");
 	gotoxy(1, 3);
-	printf("                              [규칙]\n\n");
-	printf("    * 지렁이는 현재 머리가 향하고 있는 방향으로 계속 이동합니다.\n");
-	printf("      플레이어의 조작으로 머리의 진행 방향을 바꿀수 있습니다.\n");
-	printf("    * 지렁이는 벽이나 자신의 몸 일부에 닿으면 죽습니다.\n");
-	printf("    * 지렁이는 먹이를 먹을때마다 몸이 길어집니다 \n");
-	printf("    * 지렁이의 길이를 늘려보세요!!\n\n\n\n");
-	printf("                            [조작 방법]\n\n");
-	printf("    * [↑] - 지렁이의 진행 방향을 위쪽으로 바꿀 수 있습니다. \n");
-	printf("    * [→] - 지렁이의 진행 방향을 오른쪽으로 바꿀 수 있습니다. \n");
-	printf("    * [←] - 지렁이의 진행 방향을 왼쪽으로 바꿀 수 있습니다. \n");
-	printf("    * [↓] - 지렁이의 진행 방향을 아래쪽으로 바꿀 수 있습니다. \n\n\n\n");
-	printf("    * Enter - 나가기  \n");
+	printf("                                      [규칙]\n\n");
+	printf("            * 지렁이는 현재 머리가 향하고 있는 방향으로 계속 이동합니다.\n");
+	printf("              플레이어의 조작으로 머리의 진행 방향을 바꿀수 있습니다.\n");
+	printf("            * 지렁이는 벽이나 자신의 몸 일부에 닿으면 죽습니다.\n");
+	printf("            * 지렁이는 먹이를 먹을때마다 몸이 길어집니다 \n");
+	printf("            * 지렁이의 길이를 늘려보세요!!\n\n\n\n");
+	printf("                                    [조작 방법]\n\n");
+	printf("            * [↑] - 지렁이의 진행 방향을 위쪽으로 바꿀 수 있습니다. \n");
+	printf("            * [→] - 지렁이의 진행 방향을 오른쪽으로 바꿀 수 있습니다. \n");
+	printf("            * [←] - 지렁이의 진행 방향을 왼쪽으로 바꿀 수 있습니다. \n");
+	printf("            * [↓] - 지렁이의 진행 방향을 아래쪽으로 바꿀 수 있습니다. \n\n\n\n");
+	printf("            * Enter - 나가기  \n");
 
 
 	while (1) // ENTER을 입력받으면 메인화면으로 돌아갑니다.
@@ -240,19 +243,17 @@ void game_level(void) // 게임의 난이도 설정
 	int n = 0;
 	system("cls");
 	gotoxy(1, 1);
-	printf("\n\n                          [난이도 선택]\n\n");
-	printf("\n\n    * 게임의 난이도를 선택하고 Enter키를 누르세요. (1~5)\n\n");
-	printf("    * 난이도가 올라갈수록 지렁이의 이동 속도가 증가합니다!! \n\n");
+	printf("\n\n                                      [난이도 선택]\n\n");
+	printf("\n\n                * 게임의 난이도를 선택하고 Enter키를 누르세요. (1~5)\n\n");
+	printf("                * 난이도가 올라갈수록 지렁이의 이동 속도가 증가합니다!! \n\n");
 	n = select_level();
 	switch (n)
 	{
 	case 0:
 		speed = 200;
-		printf("0");
 		break;
 	case 5:
 		speed = 175;
-		printf("5");
 		break;
 	case 10:
 		speed = 150;
@@ -277,30 +278,29 @@ void game_background(void) // 게임판의 가로 길이는 75,세로 길이는 
 	int i;
 
 	gotoxy(1, 1);
-	printf("■■■■■■■■■■■■■■■■■■■-■■■■■■■■■■■■■■■■■■■");
-	for (int i = 2; i <= 24; i++)
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	for (int i = 2; i <= 23; i++)
 	{
 		gotoxy(1, i);
 		printf("■");
 	}
-	for (int j = 2; j <= 24; j++)
+	for (int j = 2; j <= 23; j++)
 	{
-		gotoxy(76, j);
+		gotoxy(65, j);
 		printf("■");
 	}
-	gotoxy(1, 25);
-	printf("■■■■■■■■■■■■■■■■■■■-■■■■■■■■■■■■■■■■■■■");
-	//scanf_s("%d", &i); //  그냥 화면 고정시키려고.....
+	gotoxy(1, 23);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 
 }
 int select_level()
 {
-	int x = 19;
+	int x = 27;
 	int y = 15;
 
 	gotoxy(x, y);
 	printf("난이도 :①   ②   ③   ④   ⑤");
-	x += 8; // x = 27
+	x += 8; // x = 35
 	y += 2; // y = 16
 	gotoxy(x, y);
 	printf("▲");
@@ -311,7 +311,7 @@ int select_level()
 		{
 		case RIGHT:
 		{
-			if (x < 47)
+			if (x < 55)
 			{
 				gotoxy(x, y);
 				printf(" ");
@@ -325,7 +325,7 @@ int select_level()
 		}
 		case LEFT:
 		{
-			if (x > 28)
+			if (x > 36)
 			{
 				gotoxy(x, y);
 				printf(" ");
@@ -339,7 +339,7 @@ int select_level()
 		}
 		case ENTER:
 		{
-			return x - 27; // 0,5,10,15,20,25 리턴
+			return x - 35; // 0,5,10,15,20,25 리턴
 		}
 		}
 	}
@@ -362,10 +362,12 @@ void eat_star() {
 }
 
 void scoreRecord() {
-	gotoxy(80, 10);
-	printf("Length of 지렁이 : %d\n", body_number);
-	gotoxy(80, 15);
-	printf("점수 : %d\n", (body_number - 1) * 5);
+	len_earthworm = body_number;
+	gotoxy(68, 10);
+	printf("Length of 지렁이 : %d\n", len_earthworm);
+	game_score = (body_number - 1) * 5;
+	gotoxy(73, 15);
+	printf("점수 : %d\n", game_score);
 }
 
 void game_loop(void)
@@ -395,7 +397,9 @@ void game_loop(void)
 	playing = 1;
 	gotoxy(x, y);
 	printf("◑");
-	while (playing) {
+	while (playing) 
+	{
+		scoreRecord();
 		if (_kbhit() != 0) {  //아무키나 입력받았을시 if문을 실행함
 			chr = _getch();
 			if (chr == 0 || chr == 0xe0) {
@@ -404,74 +408,30 @@ void game_loop(void)
 		}
 		if (chr == UP) { //방향키 '상' 입력받을시
 			y -= 1;
-			if (y < 2) {
-				system("cls"); // 화면을 깨끗이 지운다
-				gotoxy(30, 10);
-				printf("GAME OVER\n\n");
-				gotoxy(30, 12);
-				printf("Press Enter Key.....");
-				while (1)
-				{
-					if (key_control() == ENTER)
-					{
-						playing = 0;
-						break;
-					}
-				}
+			if (y < 2) 
+			{
+				game_over();
 			}
 		}
 		else if (chr == DOWN) { //방향키 '하' 입력받을시
 			y += 1;
-			if (y > 23) {
-				system("cls");
-				gotoxy(30, 10);
-				printf("GAME OVER\n\n");
-				gotoxy(30, 12);
-				printf("Press Enter Key.....");
-				while (1)
-				{
-					if (key_control() == ENTER)
-					{
-						playing = 0;
-						break;
-					}
-				}
+			if (y > 22) 
+			{
+				game_over();
 			}
 		}
 		else if (chr == LEFT) { //방향키 '좌' 입력받을시
 			x -= 2; // 네모는 특수문자(2byte)이므로 가로는 2칸씩 이동해야함
-			if (x < 3) {
-				system("cls");
-				gotoxy(30, 10);
-				printf("GAME OVER\n\n");
-				gotoxy(30, 12);
-				printf("Press Enter Key.....");
-				while (1)
-				{
-					if (key_control() == ENTER)
-					{
-						playing = 0;
-						break;
-					}
-				}
+			if (x < 3) 
+			{
+				game_over();
 			}
 		}
 		else if (chr == RIGHT) { //방향키 '우' 입력받을시
 			x += 2;
-			if (x > 65) {
-				system("cls");
-				gotoxy(30, 10);
-				printf("GAME OVER\n\n");
-				gotoxy(30, 12);
-				printf("Press Enter Key.....");
-				while (1)
-				{
-					if (key_control() == ENTER)
-					{
-						playing = 0;
-						break;
-					}
-				}
+			if (x > 63) 
+			{
+				game_over();
 			}
 		}
 
@@ -486,7 +446,7 @@ void game_loop(void)
 
 			total_size[y][x] = 1; //몸통 좌표 추가(1이 몸통이 있다는 표시, 0이 몸통이 없다는 표시)
 			body_number++;
-			scoreRecord();
+			//scoreRecord();
 
 			continue;
 		}
@@ -505,20 +465,8 @@ void game_loop(void)
 			total_size[head_tail_remove[head_point] / 66][head_tail_remove[head_point] % 66] = 1;
 		}
 		else {     //지렁이 머리와 몸통좌표가 겹쳤을 경우로, gameover임
-			system("cls");
-			gotoxy(30, 10);
-			printf("GAME OVER\n\n");
-			gotoxy(30, 12);
-			printf("Press Enter Key.....");
-			while (1)
-			{
-				if (key_control() == ENTER)
-				{
-					playing = 0;
-					break;
-				}
-			}
-
+		
+			game_over();
 		}
 		head_point++;
 		//if (head_point >= 1656)point_head = 0;
@@ -530,4 +478,43 @@ void game_loop(void)
 
 		Sleep(speed); // 게임의 스피드 조절
 	}
+}
+
+void game_over(void)
+{
+	system("cls");
+	int now_x = 30;
+	int now_y = 8;
+
+	gotoxy(now_x, now_y);
+	printf("▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤");
+	gotoxy(now_x, now_y + 1);
+	printf("▤                                ▤");
+	gotoxy(now_x, now_y + 2);
+	printf("▤   *-----------------------*    ▤");
+	gotoxy(now_x, now_y + 3);
+	printf("▤   |  G A M E  O V E R..   |    ▤");
+	gotoxy(now_x, now_y + 4);
+	printf("▤   *-----------------------*    ▤");
+	gotoxy(now_x, now_y + 5);
+	printf("▤   YOUR SCORE: %6d           ▤", game_score);
+	gotoxy(now_x, now_y + 6);
+	printf("▤                                ▤");
+	gotoxy(now_x, now_y + 7);
+	printf("▤  Press Enter key to restart..  ▤");
+	gotoxy(now_x, now_y + 8);
+	printf("▤                                ▤");
+	gotoxy(now_x, now_y + 9);
+	printf("▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤");
+
+
+	while (1) // Enter 키를 입력받으면 종료
+	{
+		if (key_control() == ENTER)
+		{
+			playing = 0;
+			break;
+		}
+	}
+
 }
