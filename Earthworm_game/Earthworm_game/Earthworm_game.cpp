@@ -354,7 +354,7 @@ void eat_star() {
 	//prey_num = (rand() % 2 + 2);
 	for (int count = 0; count < 3; count++) {
 		rand_x[count] = ((rand() % 28)) * 2 + 3; //난수생성하여 먹잇감의 좌표를 얻음
-		rand_y[count] = (rand() % 22) + 2;
+		rand_y[count] = (rand() % 21) + 2;
 		gotoxy(rand_x[count], rand_y[count]);
 		printf("★");
 
