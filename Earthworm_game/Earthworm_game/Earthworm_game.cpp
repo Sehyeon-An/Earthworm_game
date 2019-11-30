@@ -365,7 +365,7 @@ void scoreRecord() {
 	len_earthworm = body_number;
 	gotoxy(68, 10);
 	printf("Length of 지렁이 : %d\n", len_earthworm);
-	game_score = (body_number - 1) * 5;
+	game_score = (body_number - 1) * (21000 / speed);
 	gotoxy(73, 15);
 	printf("점수 : %d\n", game_score);
 }
