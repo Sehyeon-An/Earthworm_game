@@ -30,17 +30,18 @@ void gotoxy(int x, int y); // 커서 좌표 함수
 void info_draw(void); // 게임 방법 출력함수
 void game_level(void); // 지렁이 이동속도 조절 함수
 void game_background(void); // 게임 백그라운드 구현 함수
-void eat_star(void); // 먹이 먹기 ㅎ마수
-int select_level(); // 게임 레벨 선택
+void eat_star(void); // 먹이를 먹는 함수
+int select_level(); // 게임 레벨 선택 함수
 void scoreRecord(); // 점수
 void game_loop(void); //게임루프
 void game_over(void); // 게임 오버 함수
 int body_number;
 int key; // 키보드로 부터 입력받은 값
 int speed = 0; //지렁이 스피드 조절(Sleep함수 파라미터)
-int playing;
+int playing; // 플레이 상태 1=플레이 0=플레이안함
 int len_earthworm = 0;
 int game_score = 0;
+int best_score = 0;
 
 unsigned char total_size[ROW + 1][COL + 1];
 // 충돌을 감지하기 위해 필요한 배열 
@@ -95,7 +96,6 @@ void init(void) // 콘솔창의 크기와 커서
 	ConsoleCursor.dwSize = 1;
 	SetConsoleCursorInfo(consoleHandle, &ConsoleCursor);
 
-
 }
 
 void gotoxy(int x, int y)
@@ -103,6 +103,17 @@ void gotoxy(int x, int y)
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD Pos = { x - 1,y - 1 };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
+	FILE *file;
+	fopen_s(&file,"best_score.dat", "rt");
+	if (file == 0)
+	{
+		best_score = 0;
+	}
+	else
+	{
+		fscanf_s(file, "%d", &best_score);
+		fclose(file);
+	}
 }
 
 
@@ -275,7 +286,6 @@ void game_level(void) // 게임의 난이도 설정
 void game_background(void) // 게임판의 가로 길이는 75,세로 길이는 23
 {
 	system("cls");
-	int i;
 
 	gotoxy(1, 1);
 	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
@@ -363,10 +373,12 @@ void eat_star() {
 
 void scoreRecord() {
 	len_earthworm = body_number;
-	gotoxy(68, 10);
+	gotoxy(68, 8);
 	printf("Length of 지렁이 : %d\n", len_earthworm);
 	game_score = (body_number - 1) * (21000 / speed);
-	gotoxy(73, 15);
+	gotoxy(68, 13);
+	printf("최고 점수: %d\n", best_score);
+	gotoxy(73, 18);
 	printf("점수 : %d\n", game_score);
 }
 
@@ -486,26 +498,60 @@ void game_over(void)
 	int now_x = 30;
 	int now_y = 8;
 
-	gotoxy(now_x, now_y);
-	printf("▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤");
-	gotoxy(now_x, now_y + 1);
-	printf("▤                                ▤");
-	gotoxy(now_x, now_y + 2);
-	printf("▤   *-----------------------*    ▤");
-	gotoxy(now_x, now_y + 3);
-	printf("▤   |  G A M E  O V E R..   |    ▤");
-	gotoxy(now_x, now_y + 4);
-	printf("▤   *-----------------------*    ▤");
-	gotoxy(now_x, now_y + 5);
-	printf("▤   YOUR SCORE: %6d           ▤", game_score);
-	gotoxy(now_x, now_y + 6);
-	printf("▤                                ▤");
-	gotoxy(now_x, now_y + 7);
-	printf("▤  Press Enter key to restart..  ▤");
-	gotoxy(now_x, now_y + 8);
-	printf("▤                                ▤");
-	gotoxy(now_x, now_y + 9);
-	printf("▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤");
+	if (game_score > best_score)
+	{
+		FILE* file; 
+		fopen_s(&file,"best_score.dat", "wt");
+
+		fprintf(file, "%d", game_score);
+		fclose(file);
+
+		gotoxy(now_x, now_y);
+		printf("▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤");
+		gotoxy(now_x, now_y + 1);
+		printf("▤    ★★★ BEST SCORE! ★★★   ▤  ");
+		gotoxy(now_x, now_y + 2);
+		printf("▤   *-----------------------*    ▤");
+		gotoxy(now_x, now_y + 3);
+		printf("▤   |  G A M E  O V E R..   |    ▤");
+		gotoxy(now_x, now_y + 4);
+		printf("▤   *-----------------------*    ▤");
+		gotoxy(now_x, now_y + 5);
+		printf("▤   YOUR SCORE: %6d           ▤", game_score);
+		gotoxy(now_x, now_y + 6);
+		printf("▤                                ▤");
+		gotoxy(now_x, now_y + 7);
+		printf("▤  Press Enter key to restart..  ▤");
+		gotoxy(now_x, now_y + 8);
+		printf("▤                                ▤");
+		gotoxy(now_x, now_y + 9);
+		printf("▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤");
+
+
+	}
+	else
+	{
+		gotoxy(now_x, now_y);
+		printf("▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤");
+		gotoxy(now_x, now_y + 1);
+		printf("▤                                ▤");
+		gotoxy(now_x, now_y + 2);
+		printf("▤   *-----------------------*    ▤");
+		gotoxy(now_x, now_y + 3);
+		printf("▤   |  G A M E  O V E R..   |    ▤");
+		gotoxy(now_x, now_y + 4);
+		printf("▤   *-----------------------*    ▤");
+		gotoxy(now_x, now_y + 5);
+		printf("▤   YOUR SCORE: %6d           ▤", game_score);
+		gotoxy(now_x, now_y + 6);
+		printf("▤   BEST SCORE: %6d           ▤", best_score);
+		gotoxy(now_x, now_y + 7);
+		printf("▤  Press Enter key to restart..  ▤");
+		gotoxy(now_x, now_y + 8);
+		printf("▤                                ▤");
+		gotoxy(now_x, now_y + 9);
+		printf("▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤▤");
+	}
 
 
 	while (1) // Enter 키를 입력받으면 종료
