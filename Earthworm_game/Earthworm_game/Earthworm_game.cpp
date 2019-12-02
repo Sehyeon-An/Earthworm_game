@@ -46,7 +46,7 @@ int best_score = 0;
 unsigned char total_size[ROW + 1][COL + 1];
 // 충돌을 감지하기 위해 필요한 배열 
 // 존재하면 '1' 존재하지 않으면 '0'
-unsigned int head_tail_remove[COL*ROW];
+unsigned int head_tail_remove[COL * ROW];
 //  head_point와 tail_point를 포인터로 사용하며 해당 위치값을 기록함. 
 
 int head_point;
@@ -63,6 +63,8 @@ int main(void)
 	init();
 	while (1)
 	{
+
+		system("color 04");
 		title_draw();
 		menu_code = menu_draw();
 
@@ -103,8 +105,8 @@ void gotoxy(int x, int y)
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD Pos = { x - 1,y - 1 };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
-	FILE *file;
-	fopen_s(&file,"best_score.dat", "rt");
+	FILE* file;
+	fopen_s(&file, "best_score.dat", "rt");
 	if (file == 0)
 	{
 		best_score = 0;
@@ -401,6 +403,7 @@ void game_loop(void)
 	memset(head_tail_remove, 0, MAP);
 	head_tail_remove[0] = 66 * 2 + 3; // 초기 save_x =3 save_y =2로 하기 위해. 
 	system("cls");
+	system("color 02");
 	game_background();
 	scoreRecord();
 	eat_star();
@@ -409,7 +412,7 @@ void game_loop(void)
 	playing = 1;
 	gotoxy(x, y);
 	printf("◑");
-	while (playing) 
+	while (playing)
 	{
 		scoreRecord();
 		if (_kbhit() != 0) {  //아무키나 입력받았을시 if문을 실행함
@@ -420,28 +423,28 @@ void game_loop(void)
 		}
 		if (chr == UP) { //방향키 '상' 입력받을시
 			y -= 1;
-			if (y < 2) 
+			if (y < 2)
 			{
 				game_over();
 			}
 		}
 		else if (chr == DOWN) { //방향키 '하' 입력받을시
 			y += 1;
-			if (y > 22) 
+			if (y > 22)
 			{
 				game_over();
 			}
 		}
 		else if (chr == LEFT) { //방향키 '좌' 입력받을시
 			x -= 2; // 네모는 특수문자(2byte)이므로 가로는 2칸씩 이동해야함
-			if (x < 3) 
+			if (x < 3)
 			{
 				game_over();
 			}
 		}
 		else if (chr == RIGHT) { //방향키 '우' 입력받을시
 			x += 2;
-			if (x > 63) 
+			if (x > 63)
 			{
 				game_over();
 			}
@@ -460,6 +463,12 @@ void game_loop(void)
 			body_number++;
 			//scoreRecord();
 
+			if (body_number % 5 == 0) { // 길이가 늘어나면 속도룰 증가시킴. 
+				speed -= 25;
+				if (speed < 40)speed = 40;
+				//body_number = 0;
+			}
+
 			continue;
 		}
 		save_y = head_tail_remove[tail_point] / 66;  //임시저장
@@ -477,7 +486,7 @@ void game_loop(void)
 			total_size[head_tail_remove[head_point] / 66][head_tail_remove[head_point] % 66] = 1;
 		}
 		else {     //지렁이 머리와 몸통좌표가 겹쳤을 경우로, gameover임
-		
+
 			game_over();
 		}
 		head_point++;
@@ -500,8 +509,8 @@ void game_over(void)
 
 	if (game_score > best_score)
 	{
-		FILE* file; 
-		fopen_s(&file,"best_score.dat", "wt");
+		FILE* file;
+		fopen_s(&file, "best_score.dat", "wt");
 
 		fprintf(file, "%d", game_score);
 		fclose(file);
