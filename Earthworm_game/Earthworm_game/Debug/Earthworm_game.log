@@ -1,3 +1,4 @@
 ﻿  Earthworm_game.cpp
-c:\users\haeju\earthworm_game\earthworm_game\earthworm_game\earthworm_game.cpp(107): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
-  Earthworm_game.vcxproj -> C:\Users\haeju\Earthworm_game\Earthworm_game\Debug\Earthworm_game.exe
+C:\Users\박현수\Earthworm_game\Earthworm_game\Earthworm_game\Earthworm_game.cpp(107,18): warning C4838:  'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\박현수\Earthworm_game\Earthworm_game\Earthworm_game\Earthworm_game.cpp(107,24): warning C4838:  'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
+  Earthworm_game.vcxproj -> C:\Users\박현수\Earthworm_game\Earthworm_game\Debug\Earthworm_game.exe
