@@ -120,6 +120,15 @@
   <ItemGroup>
     <ClCompile Include="Earthworm_game.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Earthworm_game.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\res\GameIcon.ico" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
