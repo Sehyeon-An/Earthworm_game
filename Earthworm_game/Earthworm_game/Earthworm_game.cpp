@@ -73,7 +73,6 @@ int main(void)
 		{
 			game_level();
 			game_loop();
-
 		}
 		else if (menu_code == 2) // 게임 정보
 		{
